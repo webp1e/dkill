@@ -1,0 +1,44 @@
+#!/bin/bash
+
+DNS=$1
+DOMAIN=$2
+
+echo "DKILL - сканер DNS от unsecured"
+
+# версия
+echo -n "определение версии DNS-софта... "
+version=$(dig version.bind. CHAOS TXT @"$DNS" +short 2>/dev/null | sed 's/"//g')
+
+if [[ -n "$version" ]]; then
+    echo "$version"
+else
+    echo "не удалось определить (сервер не раскрывает версию)"
+fi
+
+
+
+# резолв
+echo -n "проверка открытого резолвера... "
+res_c=$(dig @"$DNS" google.com +short 2>/dev/null)
+
+if [[ -n "$res_c" ]]; then
+    echo "$1 - открытый резолвер!"
+    echo "   (Получен ответ для google.com: $res_c)"
+else
+    echo "$1 не является открытым резолвером"
+fi
+
+
+
+# з трансфер
+echo -n "проверка зонного трансфера... "
+axfr_o=$(dig axfr @"$DNS" "$DOMAIN" 2>/dev/null)
+
+if echo "$axfr_o" | grep -q "ANSWER SECTION" && ! echo "$axfr_o" | grep -q "Transfer failed."; then
+    echo "зонный трансфер возможен для домена $DOMAIN !"
+    echo "   (Сервер выдал записи зоны)"
+else
+    echo "зонный трансфер запрещен"
+fi
+
+echo "аудит окончен..."
