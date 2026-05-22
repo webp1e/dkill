@@ -41,4 +41,53 @@ else
     echo "зонный трансфер запрещен"
 fi
 
+# днссек
+
+dig @"$DNS" "$DOMAIN" DNSKEY +short
+
+if [[ -n "$dnskey" ]]; then
+    echo "DNSSEC настроен"
+else
+    echo "DNSSEC отсутствует"
+fi
+
+# птр
+
+ptr=$(dig @"$DNS" -x "$DNS" +short 2>/dev/null)
+if [[ -n "$ptr" ]]; then
+    echo "PTR запись: $ptr"
+else
+    echo "PTR запись отсутствует"
+fi
+
+# спф
+
+spf=$(dig @"$DNS" "$DOMAIN" TXT +short 2>/dev/null | grep "v=spf")
+if [[ -z "$spf" ]]; then
+    echo "SPF отсутствует — домен уязвим к email спуфингу"
+else
+    echo "SPF найден: $spf"
+fi
+
+# дмарс
+
+dmarc=$(dig @"$DNS" "_dmarc.$DOMAIN" TXT +short 2>/dev/null)
+if [[ -z "$dmarc" ]]; then
+    echo "DMARC отсутствует"
+else
+    echo "DMARC: $dmarc"
+fi
+
+# мх
+
+mx=$(dig @"$DNS" "$DOMAIN" MX +short 2>/dev/null)
+if [[ -z "$mx" ]]; then
+    echo "MX записи отсутствуют"
+else
+    echo "MX записи найдены:"
+    echo "$mx" | while read line; do
+        echo "   $line"
+    done
+fi
+
 echo "аудит окончен..."
