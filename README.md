@@ -6,7 +6,7 @@
 
 скачать инсталлер
 
-```curl -O https://raw.githubusercontent.com/webp1e/dkill/main/install.sh```
+```curl -O https://raw.githubusercontent.com/webp1e/dkill/main/installer.sh```
 
 дать права и запустить
 ```chmod +x install.sh```
