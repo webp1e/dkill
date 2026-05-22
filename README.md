@@ -1,17 +1,22 @@
 # dkill
 простой сканер dns уязвимостей написанный на bash
 
-для установки установите 
-sudo pacman -S bind-tools
+для запуска установите 
+```sudo pacman -S bind-tools```
 
-зайдите в директорию с файлом
-а после введите следующее
-```mv dkill .local/bin/```
-```sudo chmod +x .local/bin/dkill```
+скачать инсталлер
+
+```curl -O https://raw.githubusercontent.com/webp1e/dkill/main/install.sh```
+
+дать права и запустить
+```chmod +x install.sh```
+```./install.sh```
 
 готово! вы установили dkill
 
+
 как запустить?
+
 введите следующее
 dkill {dns сервера} {домен сервера}
 
